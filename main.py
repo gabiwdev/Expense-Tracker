@@ -21,7 +21,8 @@ def limpar(palavra):
     return ' '.join(texto)
 
 moeda = {
-    'BRL': ['reais', 'real', 'r$', ]
+    'BRL': ['reais', 'real', 'r$'],
+    'USD': ['dolar', 'dolares']
 }
 
 def detectar_moeda(frase):
