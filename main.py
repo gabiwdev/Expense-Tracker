@@ -20,14 +20,24 @@ def limpar(palavra):
 
     return ' '.join(texto)
 
+moeda = {
+    'BRL': ['reais', 'real', 'r$', ]
+}
 
 def detectar_moeda(frase):
-    números = []
+    numeros = ''
     texto = frase.split()
     for palavra in texto:
         if re.search(r'\d', palavra):
-            números.append(palavra)
-    print(números)
+            numeros += f'{palavra} '
+
+    quantia = ''.join(
+        caractere for caractere in numeros if caractere.isdigit()
+    )
+
+    moeda = ''.join(
+        caractere for caractere in numeros if not caractere.isdigit()
+    )
 
 tst = limpar('comprei duas coxinha ontem, foi 23R$.')
 
