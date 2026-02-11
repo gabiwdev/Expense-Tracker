@@ -22,17 +22,18 @@ def limpar(palavra):
 
 moedas = {
     'BRL': ['reais', 'real', 'r$'],
-    'USD': ['dolar', 'dolares']
+    'USD': ['dolar', 'dolares', '$']
 }
 
 def detectar_moeda(frase, dict):
-    for chave, item in dict.items():
-        if item in frase:
-            return chave
+    for chave, lista in dict.items():
+        for item in sorted(lista, key=len, reverse=True):
+            if item in frase:
+                return chave
 
 
 
 
 tst = limpar('comprei duas coxinha ontem, foi 23R$.')
 
-detectar_moeda(tst)
+print(detectar_moeda(tst, moedas))
