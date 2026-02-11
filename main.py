@@ -33,19 +33,27 @@ def detectar_moeda(frase, dict):
         for item in sorted(lista, key=len, reverse=True):
             if item in frase:
                 return chave
+    return 'Não identificado'
 
 def detectar_quantia(frase):
     nums = []
     for palavra in frase.split():
         if re.search(r"\d", palavra):
             nums.append(re.sub('[a-zA-Z]', '', palavra).strip(simbolos))
+    return nums
+def detectar_monetario(numeros, frase):
+    palavra_antes = ''
+    palavra_depois = ''
+    texto = frase.split()
+    for num in numeros:
+        if num in texto:
+            pass
 
 
+tst = limpar('comprei 2 coxinha ontem, foi 23.50R$.')
 
-
-tst = limpar('comprei duas coxinha ontem, foi 23.50.')
-
+numeros = detectar_quantia(tst)
 print(tst.split())
-print(re.search(r"\d", tst))
-
-detectar_quantia(tst)
+for num in numeros:
+    print(num)
+    print(num in tst.split())
