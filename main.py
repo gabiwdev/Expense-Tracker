@@ -41,19 +41,26 @@ def detectar_quantia(frase):
         if re.search(r"\d", palavra):
             nums.append(re.sub('[a-zA-Z]', '', palavra).strip(simbolos))
     return nums
-def detectar_monetario(numeros, frase):
+def detectar_monetario(numeros, frase, dict):
     palavra_antes = ''
     palavra_depois = ''
     texto = frase.split()
-    for num in numeros:
-        if num in texto:
-            pass
+    print(re.sub(f'{moedas["BRL"][2]}', '', texto))
+    for chave, lista in dict.items():
+        for item in lista:
+            if not item.isalpha():
+                continue
+            if item in texto:
+                palavra_antes = texto[(texto.index(item) - 1)]
+                palavra_depois = texto[(texto.index(item) + 1)]
 
+            if palavra_antes.isdigit():
+                return palavra_antes
+            if palavra_depois.isdigit():
+                return palavra_depois
 
 tst = limpar('comprei 2 coxinha ontem, foi 23.50R$.')
 
 numeros = detectar_quantia(tst)
 print(tst.split())
-for num in numeros:
-    print(num)
-    print(num in tst.split())
+detectar_monetario(numeros, tst, moedas)
