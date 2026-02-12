@@ -53,21 +53,24 @@ def detectar_quantia(frase):
             nums.append(re.sub('[a-zA-Z]', '', palavra).strip(''.join(simbolos)))
     return nums
 def detectar_monetario(numeros, frase, dict):
-    palavra_antes = ''
-    palavra_depois = ''
-    texto = frase.split()
-    for chave, lista in dict.items():
-        for item in lista:
-            if not item.isalpha():
-                continue
-            if item in texto:
-                palavra_antes = texto[(texto.index(item) - 1)]
-                palavra_depois = texto[(texto.index(item) + 1)]
+    tokens = frase.split()
+    print(texto)
+    for i, palavra in enumerate(tokens):
+        for chave, lista in dict.items():
+            if palavra in lista:
+                anterior = tokens[i-1] if i > 0 else None
+                depois = tokens[i+1] if i < len(tokens)-1 else None
+                if anterior and re.search(r"\d", anterior):
+                    return anterior
+                elif depois and re.search(r"\d", depois):
+                    return depois
+                else:
+                    continue
+    return None
 
-            if palavra_antes.isdigit():
-                return palavra_antes
-            if palavra_depois.isdigit():
-                return palavra_depois
+
 
 tst = limpar('comprei 2 coxinha ontem, foi 23.50R$.')
-print(tst)
+nums = detectar_quantia(tst)
+detectar_monetario(nums, tst, moedas)
+
