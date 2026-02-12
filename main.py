@@ -3,23 +3,6 @@ import string
 import unicodedata as ucd
 import re
 
-
-
-def limpar(palavra):
-
-    pontuacao = ',<>´`".%&*()'
-
-    palavra = ''.join(
-        c for c in ucd.normalize('NFD', palavra)
-        if ucd.category(c) != 'Mn'
-    )
-
-    palavra = palavra.lower()
-    texto = palavra.split()
-    texto = [t.strip(pontuacao) for t in texto]
-
-    return ' '.join(texto)
-
 moedas = {
     'BRL': ['r$' ,'reais', 'real'],
     'USD': ['dolar', 'dolares', '$'],
@@ -33,7 +16,27 @@ simbolos = []
 for lista in moedas.values():
     for item in lista:
         if not item.isalpha():
-            simbolos.append(item)
+            simbolos.append(re.escape(item))
+
+print(f'{"|".join(simbolos)}')
+
+def limpar(palavra):
+
+    pontuacao = ',<>´`".%&*()'
+
+    palavra = ''.join(
+        c for c in ucd.normalize('NFD', palavra)
+        if ucd.category(c) != 'Mn'
+    )
+
+    palavra = palavra.lower()
+    texto = palavra.split()
+    texto = [t.strip(pontuacao) for t in texto]
+    texto = ' '.join(texto)
+    texto = re.sub(rf'(\d)({"|".join(simbolos)})', r'\1 \2', texto)
+    return texto
+
+
 
 print(simbolos)
 def detectar_moeda(frase, dict):
@@ -67,7 +70,4 @@ def detectar_monetario(numeros, frase, dict):
                 return palavra_depois
 
 tst = limpar('comprei 2 coxinha ontem, foi 23.50R$.')
-
-numeros = detectar_quantia(tst)
-print(tst.split())
-detectar_monetario(numeros, tst, moedas)
+print(tst)
