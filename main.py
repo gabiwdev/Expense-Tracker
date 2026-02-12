@@ -21,13 +21,21 @@ def limpar(palavra):
     return ' '.join(texto)
 
 moedas = {
-    'BRL': ['reais', 'real', 'r$'],
+    'BRL': ['r$' ,'reais', 'real'],
     'USD': ['dolar', 'dolares', '$'],
     'EUR': ['euro', 'euros', '€']
 }
 
-simbolos = '$€'
 
+
+simbolos = []
+
+for lista in moedas.values():
+    for item in lista:
+        if not item.isalpha():
+            simbolos.append(item)
+
+print(simbolos)
 def detectar_moeda(frase, dict):
     for chave, lista in dict.items():
         for item in sorted(lista, key=len, reverse=True):
@@ -39,13 +47,12 @@ def detectar_quantia(frase):
     nums = []
     for palavra in frase.split():
         if re.search(r"\d", palavra):
-            nums.append(re.sub('[a-zA-Z]', '', palavra).strip(simbolos))
+            nums.append(re.sub('[a-zA-Z]', '', palavra).strip(''.join(simbolos)))
     return nums
 def detectar_monetario(numeros, frase, dict):
     palavra_antes = ''
     palavra_depois = ''
     texto = frase.split()
-    print(re.sub(f'{moedas["BRL"][2]}', '', texto))
     for chave, lista in dict.items():
         for item in lista:
             if not item.isalpha():
