@@ -40,18 +40,12 @@ def limpar(palavra):
 
 print(simbolos)
 def detectar_moeda(frase, dict):
+    texto = frase.split()
     for chave, lista in dict.items():
         for item in sorted(lista, key=len, reverse=True):
-            if item in frase:
+            if item in texto:
                 return chave
-    return 'Não identificado'
-
-def detectar_quantia(frase):
-    nums = []
-    for palavra in frase.split():
-        if re.search(r"\d", palavra):
-            nums.append(re.sub('[a-zA-Z]', '', palavra).strip(''.join(simbolos)))
-    return nums
+    return None
 
 def detectar_monetario(numeros, frase, dict):
     tokens = frase.split()
