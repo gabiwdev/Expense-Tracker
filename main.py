@@ -69,12 +69,17 @@ def detectar_monetario(frase, dict):
                 return depois
     return None
 
-def detectar_tempo(frase):
-    for tempo in sorted(tempo_indicador.keys(), key=len, reverse=True):
+def detectar_tempo(frase, dict):
+    for tempo in sorted(dict.keys(), key=len, reverse=True):
         padrão = rf'\b{re.escape(expressão)}'
         if re.search(padrão, frase):
             return expressão
     return None
+
+def calcular_tempo(expressão, dict):
+    data_atual = dt.date.today()
+    data_aproximada = data_atual - dict[expressão]
+    return data_aproximada
 
 tst = limpar('comprei 2 coxinha ontem, foi 23.50R$.')
 print(detectar_monetario(tst, moedas))
