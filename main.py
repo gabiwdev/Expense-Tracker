@@ -9,7 +9,15 @@ moedas = {
     'EUR': ['euro', 'euros', '€']
 }
 
-
+tempo_indicador = {
+    'ontem': dt.timedelta(days=1),
+    'anteontem': dt.timedelta(days=2),
+    'hoje': dt.timedelta(days=0),
+    'semana passada': dt.timedelta(days=7),
+    'mês passado': dt.timedelta(days=30),
+    'mês atrás': dt.timedelta(days=30),
+    'semana atrás': dt.timedelta(days=30)
+}
 
 simbolos = []
 
@@ -34,9 +42,8 @@ def limpar(palavra):
     texto = [t.strip(pontuacao) for t in texto]
     texto = ' '.join(texto)
     texto = re.sub(rf'(\d)({"|".join(simbolos)})', r'\1 \2', texto)
+    texto = re.sub(rf'({"|".join(simbolos)})(\d)', r'\1 \2', texto)
     return texto
-
-
 
 print(simbolos)
 def detectar_moeda(frase, dict):
@@ -47,7 +54,7 @@ def detectar_moeda(frase, dict):
                 return chave
     return None
 
-def detectar_monetario(numeros, frase, dict):
+def detectar_monetario(frase, dict):
     tokens = frase.split()
     moeda = detectar_moeda(frase, dict)
     if not moeda:
@@ -62,9 +69,16 @@ def detectar_monetario(numeros, frase, dict):
                 return depois
     return None
 
-
+def detectar_tempo(frase):
+    for tempo in sorted(tempo_indicador.keys(), key=len, reverse=True):
+        padrão = rf'\b{re.escape(expressão)}'
+        if re.search(padrão, frase):
+            return expressão
+    return None
 
 tst = limpar('comprei 2 coxinha ontem, foi 23.50R$.')
-nums = detectar_quantia(tst)
-print(detectar_monetario(nums, tst, moedas))
+print(detectar_monetario(tst, moedas))
 
+time = dt.date.today()
+timet = dt.timedelta(days=50)
+print(time - timet)
