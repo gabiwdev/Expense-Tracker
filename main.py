@@ -16,7 +16,7 @@ tempo_indicador = {
     'semana passada': dt.timedelta(days=7),
     'mês passado': dt.timedelta(days=30),
     'mês atrás': dt.timedelta(days=30),
-    'semana atrás': dt.timedelta(days=30)
+    'semana atrás': dt.timedelta(days=7)
 }
 
 simbolos = []
@@ -26,10 +26,14 @@ for lista in moedas.values():
         if not item.isalpha():
             simbolos.append(re.escape(item))
 
-print(f'{"|".join(simbolos)}')
-
 def limpar(palavra):
+    """
+    Função que normaliza a frase recebida, tirando pontuações, acentos.
+    Também prepara a frase para a detecção de moeda.
 
+    :param palavra: Frase ou palavra recebida para a normalização
+    :return: Frase ou palavra já normalizada
+    """
     pontuacao = ',<>´`".%&*()'
 
     palavra = ''.join(
@@ -45,8 +49,15 @@ def limpar(palavra):
     texto = re.sub(rf'({"|".join(simbolos)})(\d)', r'\1 \2', texto)
     return texto
 
-print(simbolos)
 def detectar_moeda(frase, dict):
+    """
+    Função que detecta o tipo de moeda usado como BRL, USD ou EUR.
+    Usa um dicionario com as moedas predefinidas para detectá-la.
+
+    :param frase: Frase onde a moeda será procurada
+    :param dict: Dicionário com as moedas e os termos identificadores delas.
+    :return: Retorna o Código de Moeda ISO da moeda (ex.: BRL) ou None se não detectar
+    """
     texto = frase.split()
     for chave, lista in dict.items():
         for item in sorted(lista, key=len, reverse=True):
@@ -55,6 +66,15 @@ def detectar_moeda(frase, dict):
     return None
 
 def detectar_monetario(frase, dict):
+    """
+    Detecta o valor que representa o valor monetário da frase.
+    O valor considerado monetário será escolhido com base nos termos ao redor.
+
+    :param frase: Frase a ser analisada
+    :param dict: Dicionario com as moedas e simbolos das moedas.
+    :return: Retorna o valor que a função detectar como monetário ou None caso não encontre.
+    """
+
     tokens = frase.split()
     moeda = detectar_moeda(frase, dict)
     if not moeda:
@@ -70,6 +90,14 @@ def detectar_monetario(frase, dict):
     return None
 
 def detectar_tempo(frase, dict):
+    """
+    Detecta a expressão de tempo como "Ontem", "Anteontem" e etc.
+
+    :param frase: Frase a ser analisada
+    :param dict: Dicionario com expressões de tempo predefinidas.
+    :return: Retorna a expressão do tempo (ex.: Ontem) ou None caso não seja encontrada
+    """
+
     for tempo in sorted(dict.keys(), key=len, reverse=True):
         padrão = rf'\b{re.escape(expressão)}'
         if re.search(padrão, frase):
@@ -77,6 +105,15 @@ def detectar_tempo(frase, dict):
     return None
 
 def calcular_tempo(expressão, dict):
+    """
+    Faz o cálculo com base na data atual.
+    Reduz o tempo da data atual com base na expressão de tempo passada.
+
+    :param expressão: Expressão usada para referência do cálculo
+    :param dict: Dicionário com os valores de diferença de tempo em dias.
+    :return: Retorna o valor da data aproximada.
+    """
+
     data_atual = dt.date.today()
     data_aproximada = data_atual - dict[expressão]
     return data_aproximada
