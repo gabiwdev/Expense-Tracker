@@ -127,4 +127,19 @@ while continuar:
     moeda = detectar_moeda(frase, moedas)
     tempo = detectar_tempo(frase, tempo_indicador)
     dia = calcular_tempo(tempo, tempo_indicador)
-    print(frase, valor, moeda, tempo, dia)
+
+    dia_formatado = dia.strftime("%d/%m/%Y")
+
+    compras.append({
+        'Valor': valor,
+        'Moeda': moeda,
+        'Data Aproximada': dia_formatado
+    })
+
+    print(compras)
+
+    decisao = input('Quer continuar? (S/N) ')
+    if decisao.strip().lower() in 's':
+        continuar = True
+    else:
+        continuar = False
