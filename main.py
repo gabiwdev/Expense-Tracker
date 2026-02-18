@@ -10,6 +10,7 @@ moedas = {
 }
 
 tempo_indicador = {
+    'hoje': dt.timedelta(days=0),
     'ontem': dt.timedelta(days=1),
     'anteontem': dt.timedelta(days=2),
     'hoje': dt.timedelta(days=0),
@@ -102,7 +103,7 @@ def detectar_tempo(frase, dict):
         padrão = rf'\b{re.escape(tempo)}'
         if re.search(padrão, frase):
             return tempo
-    return None
+    return 'hoje'
 
 def calcular_tempo(expressao, dict):
     """
@@ -118,22 +119,41 @@ def calcular_tempo(expressao, dict):
     data_aproximada = data_atual - dict[expressao]
     return data_aproximada
 
+def mostrar_compras(compra: dict):
+    if len(compra) < 1:
+        print('-- Lista de compras vazia --')
+
+    for index, item in enumerate(compra):
+        print(f"""--- Compra {index + 1} ---
+Data aproximada: {item['data aproximada']}
+Valor: {item['valor']}
+Moeda usada: {item['moeda']}
+"""
+)
+
 compras = []
 continuar = True
 
 while continuar:
+    lista = input('Quer mostrar sua lista de compras? (S/N) ')
+    if lista.strip().lower() in 's':
+        mostrar_compras(compras)
+
+
     frase = limpar(str(input('Escreva a frase: ')))
     valor = detectar_monetario(frase, moedas)
     moeda = detectar_moeda(frase, moedas)
     tempo = detectar_tempo(frase, tempo_indicador)
+    print(tempo)
     dia = calcular_tempo(tempo, tempo_indicador)
+    print(dia)
 
     dia_formatado = dia.strftime("%d/%m/%Y")
 
     compras.append({
-        'Valor': valor,
-        'Moeda': moeda,
-        'Data Aproximada': dia_formatado
+        'valor': valor,
+        'moeda': moeda,
+        'data aproximada': dia_formatado
     })
 
     print(compras)
