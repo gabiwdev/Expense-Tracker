@@ -119,7 +119,15 @@ def calcular_tempo(expressao, dict):
     data_aproximada = data_atual - dict[expressao]
     return data_aproximada
 
-def mostrar_compras(compra: dict):
+def mostrar_compras(compra: list):
+    """
+    Uma função que printa no output a lista de compras formatada.
+    Data aproximada, valor e moeda.
+
+    :param compra: Lista de dicionários que inclui todas as compras
+    :return: Não retorna nada.
+    """
+
     if len(compra) < 1:
         print('-- Lista de compras vazia --')
 
