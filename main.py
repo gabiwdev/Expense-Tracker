@@ -99,12 +99,12 @@ def detectar_tempo(frase, dict):
     """
 
     for tempo in sorted(dict.keys(), key=len, reverse=True):
-        padrão = rf'\b{re.escape(expressão)}'
+        padrão = rf'\b{re.escape(tempo)}'
         if re.search(padrão, frase):
-            return expressão
+            return tempo
     return None
 
-def calcular_tempo(expressão, dict):
+def calcular_tempo(expressao, dict):
     """
     Faz o cálculo com base na data atual.
     Reduz o tempo da data atual com base na expressão de tempo passada.
@@ -115,12 +115,16 @@ def calcular_tempo(expressão, dict):
     """
 
     data_atual = dt.date.today()
-    data_aproximada = data_atual - dict[expressão]
+    data_aproximada = data_atual - dict[expressao]
     return data_aproximada
 
-tst = limpar('comprei 2 coxinha ontem, foi 23.50R$.')
-print(detectar_monetario(tst, moedas))
+compras = []
+continuar = True
 
-time = dt.date.today()
-timet = dt.timedelta(days=50)
-print(time - timet)
+while continuar:
+    frase = limpar(str(input('Escreva a frase: ')))
+    valor = detectar_monetario(frase, moedas)
+    moeda = detectar_moeda(frase, moedas)
+    tempo = detectar_tempo(frase, tempo_indicador)
+    dia = calcular_tempo(tempo, tempo_indicador)
+    print(frase, valor, moeda, tempo, dia)
