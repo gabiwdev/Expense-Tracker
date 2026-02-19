@@ -141,9 +141,7 @@ def mostrar_compras(compra: list):
 
     for index, item in enumerate(compra):
         print(f"""--- Compra {index + 1} ---
-Data aproximada: {item['data aproximada']}
-Valor: {item['valor']}
-Moeda usada: {item['moeda']}
+{repr(item)}
 """
 )
 
