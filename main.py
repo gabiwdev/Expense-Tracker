@@ -3,6 +3,15 @@ import string
 import unicodedata as ucd
 import re
 
+class Compra():
+    def __init__(self, valor, moeda, data):
+        self.valor = valor
+        self.moeda = moeda
+        self.data = data
+
+    def __repr__(self):
+        return f"{self.data} - {self.valor} {self.moeda}"
+
 moedas = {
     'BRL': ['r$' ,'reais', 'real'],
     'USD': ['dolar', 'dolares', '$'],
@@ -10,7 +19,6 @@ moedas = {
 }
 
 tempo_indicador = {
-    'hoje': dt.timedelta(days=0),
     'ontem': dt.timedelta(days=1),
     'anteontem': dt.timedelta(days=2),
     'hoje': dt.timedelta(days=0),
@@ -50,38 +58,38 @@ def limpar(palavra):
     texto = re.sub(rf'({"|".join(simbolos)})(\d)', r'\1 \2', texto)
     return texto
 
-def detectar_moeda(frase, dict):
+def detectar_moeda(frase, dicionario):
     """
     Função que detecta o tipo de moeda usado como BRL, USD ou EUR.
     Usa um dicionario com as moedas predefinidas para detectá-la.
 
     :param frase: Frase onde a moeda será procurada
-    :param dict: Dicionário com as moedas e os termos identificadores delas.
+    :param dicionario: Dicionário com as moedas e os termos identificadores delas.
     :return: Retorna o Código de Moeda ISO da moeda (ex.: BRL) ou None se não detectar
     """
     texto = frase.split()
-    for chave, lista in dict.items():
+    for chave, lista in dicionario.items():
         for item in sorted(lista, key=len, reverse=True):
             if item in texto:
                 return chave
     return None
 
-def detectar_monetario(frase, dict):
+def detectar_monetario(frase, dicionario):
     """
     Detecta o valor que representa o valor monetário da frase.
     O valor considerado monetário será escolhido com base nos termos ao redor.
 
     :param frase: Frase a ser analisada
-    :param dict: Dicionario com as moedas e simbolos das moedas.
+    :param dicionario: Dicionario com as moedas e simbolos das moedas.
     :return: Retorna o valor que a função detectar como monetário ou None caso não encontre.
     """
 
     tokens = frase.split()
-    moeda = detectar_moeda(frase, dict)
+    moeda = detectar_moeda(frase, dicionario)
     if not moeda:
         return None
     for i, palavra in enumerate(tokens):
-        if palavra in dict[moeda]:
+        if palavra in dicionario[moeda]:
             anterior = tokens[i-1] if i > 0 else None
             depois = tokens[i+1] if i < len(tokens)-1 else None
             if anterior and re.search(r"\d", anterior):
@@ -90,33 +98,33 @@ def detectar_monetario(frase, dict):
                 return depois
     return None
 
-def detectar_tempo(frase, dict):
+def detectar_tempo(frase, dicionario):
     """
     Detecta a expressão de tempo como "Ontem", "Anteontem" e etc.
 
     :param frase: Frase a ser analisada
-    :param dict: Dicionario com expressões de tempo predefinidas.
+    :param dicionario: Dicionario com expressões de tempo predefinidas.
     :return: Retorna a expressão do tempo (ex.: Ontem) ou None caso não seja encontrada
     """
 
-    for tempo in sorted(dict.keys(), key=len, reverse=True):
+    for tempo in sorted(dicionario.keys(), key=len, reverse=True):
         padrão = rf'\b{re.escape(tempo)}'
         if re.search(padrão, frase):
             return tempo
     return 'hoje'
 
-def calcular_tempo(expressao, dict):
+def calcular_tempo(expressao, dicionario):
     """
     Faz o cálculo com base na data atual.
     Reduz o tempo da data atual com base na expressão de tempo passada.
 
     :param expressão: Expressão usada para referência do cálculo
-    :param dict: Dicionário com os valores de diferença de tempo em dias.
+    :param dicionario: Dicionário com os valores de diferença de tempo em dias.
     :return: Retorna o valor da data aproximada.
     """
 
     data_atual = dt.date.today()
-    data_aproximada = data_atual - dict[expressao]
+    data_aproximada = data_atual - dicionario[expressao]
     return data_aproximada
 
 def mostrar_compras(compra: list):
@@ -152,17 +160,10 @@ while continuar:
     valor = detectar_monetario(frase, moedas)
     moeda = detectar_moeda(frase, moedas)
     tempo = detectar_tempo(frase, tempo_indicador)
-    print(tempo)
     dia = calcular_tempo(tempo, tempo_indicador)
-    print(dia)
-
     dia_formatado = dia.strftime("%d/%m/%Y")
 
-    compras.append({
-        'valor': valor,
-        'moeda': moeda,
-        'data aproximada': dia_formatado
-    })
+    compras.append(Compra(valor, moeda, dia_formatado))
 
     print(compras)
 
