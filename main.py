@@ -1,5 +1,6 @@
 import funcoes as f
 import datetime as dt
+import json
 
 class Compra():
     def __init__(self, valor, moeda, data):
@@ -49,9 +50,10 @@ while continuar:
     dia = f.calcular_tempo(tempo, tempo_indicador)
     dia_formatado = dia.strftime("%d/%m/%Y")
 
-
-
     compras.append(Compra(valor, moeda, dia_formatado))
+
+    with open('compras.json', 'w') as json_file:
+        json.dump(f.lista_compras_dicionario(compras), json_file, indent=4)
 
     print(compras)
 
@@ -59,4 +61,5 @@ while continuar:
     if decisao.strip().lower() in 's':
         continuar = True
     else:
+        print(f.lista_compras_dicionario(compras))
         continuar = False
