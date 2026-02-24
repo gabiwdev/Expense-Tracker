@@ -10,6 +10,13 @@ class Compra():
     def __repr__(self):
         return f"{self.data} - {self.valor} {self.moeda}"
 
+    def para_dicionario(self):
+        return {
+            'valor': self.valor,
+            'moeda': self.moeda,
+            'data': self.data
+        }
+
 moedas = {
     'BRL': ['r$' ,'reais', 'real'],
     'USD': ['dolar', 'dolares', '$'],
@@ -41,6 +48,8 @@ while continuar:
     tempo = f.detectar_tempo(frase, tempo_indicador)
     dia = f.calcular_tempo(tempo, tempo_indicador)
     dia_formatado = dia.strftime("%d/%m/%Y")
+
+
 
     compras.append(Compra(valor, moeda, dia_formatado))
 
