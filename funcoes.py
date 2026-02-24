@@ -2,6 +2,22 @@ import unicodedata as ucd
 import re
 import datetime as dt
 
+class Compra():
+    def __init__(self, valor, moeda, data):
+        self.valor = valor
+        self.moeda = moeda
+        self.data = data
+
+    def __repr__(self):
+        return f"{self.data} - {self.valor} {self.moeda}"
+
+    def para_dicionario(self):
+        return {
+            'valor': self.valor,
+            'moeda': self.moeda,
+            'data': self.data
+        }
+
 def limpar(palavra, dicionario):
     """
     Função que normaliza a frase recebida, tirando pontuações, acentos.
@@ -134,3 +150,20 @@ def lista_compras_dicionario(lista):
         lista_compras.append(compra.para_dicionario())
 
     return lista_compras
+
+def carregar_compra():
+    import json
+
+    try:
+        with open('compras.json', 'r') as f:
+            dados = json.load(f)
+    except(FileNotFoundError, json.JSONDecoder):
+        return []
+    print(dados)
+
+    compras = []
+
+    for dado in dados:
+        compras.append(Compra(dado['valor'], dado['moeda'], dado['data']))
+
+    return compras

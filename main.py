@@ -2,21 +2,6 @@ import funcoes as f
 import datetime as dt
 import json
 
-class Compra():
-    def __init__(self, valor, moeda, data):
-        self.valor = valor
-        self.moeda = moeda
-        self.data = data
-
-    def __repr__(self):
-        return f"{self.data} - {self.valor} {self.moeda}"
-
-    def para_dicionario(self):
-        return {
-            'valor': self.valor,
-            'moeda': self.moeda,
-            'data': self.data
-        }
 
 moedas = {
     'BRL': ['r$' ,'reais', 'real'],
@@ -34,7 +19,7 @@ tempo_indicador = {
     'semana atrás': dt.timedelta(days=7)
 }
 
-compras = []
+compras = f.carregar_compra()
 continuar = True
 
 while continuar:
@@ -50,7 +35,7 @@ while continuar:
     dia = f.calcular_tempo(tempo, tempo_indicador)
     dia_formatado = dia.strftime("%d/%m/%Y")
 
-    compras.append(Compra(valor, moeda, dia_formatado))
+    compras.append(f.Compra(valor, moeda, dia_formatado))
 
     with open('compras.json', 'w') as json_file:
         json.dump(f.lista_compras_dicionario(compras), json_file, indent=4)
