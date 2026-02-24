@@ -120,3 +120,17 @@ def mostrar_compras(compra: list):
 {repr(item)}
 """
 )
+
+def lista_compras_dicionario(lista):
+    """
+    Uma função que transforma uma lista de objetos de classe "compra" em um dicionário.
+
+    :param lista: Lista de objetos de classe "Compra"
+    :return: Retorna uma lista de dicionários com o valor de cada atributo do objeto
+    """
+
+    lista_compras = []
+    for compra in lista:
+        lista_compras.append(compra.para_dicionario())
+
+    return lista_compras
