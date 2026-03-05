@@ -33,6 +33,7 @@ python main.py
 - Cálculo automático da data com base no dia atual
 - Armazenamento das compras em lista
 - Exibição formatada das compras registradas
+- Persistência de dados
 
 ## Conceitos Aplicados 
 
@@ -41,15 +42,14 @@ python main.py
 - Manipulação de Strings
 - Estruturas de Dados
 - Datas com datetime
+- Sistema de persistência com JSON
 
 ## Limitações 
 
 - Atualmente o sistema depende de frases com uma formatação específica, onde o valor monetário esteja uma palavra antes ou depois da palavra que indique isso (real, reais, r$).
-- O sistema não possui persistência.
 - Ainda não há uma forma fácil de adicionar mais moedas sem ser mexendo no código base.
 
 ## Futuras Implementações 
 
 - Detecção inteligente de categorias.
-- Persistência de dados.
 - API para melhor utilização
