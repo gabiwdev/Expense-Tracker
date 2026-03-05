@@ -8,6 +8,8 @@ class Compra():
         self.moeda = moeda
         self.data = data
 
+    # Teste
+
     def __repr__(self):
         return f"{self.data} - {self.valor} {self.moeda}"
 
